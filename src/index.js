@@ -43,7 +43,7 @@ const parse = () => {
     const itemsBroken = [];
     strings.forEach((string, i) => {
       const parsedString = cleanString(string);
-      if (parsedString.includes('$') && /^\$\d+.\d+/.test(parsedString)) {
+      if (parsedString.includes('$') && /^\$\d+.\d+$/.test(parsedString)) {
         /*
         Case 1:
         itemCode, description, uom, $price
