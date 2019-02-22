@@ -9,7 +9,7 @@ const outputBrokenFileName = `${outputDir}\\output-broken-${Date.now()}.csv`;
 
 const inputFileName = process.argv[2];
 if (!inputFileName) {
-  console.log('Error! -> Please use the launcher to open a file');
+  console.log('Error! -> Please drag a pdf onto the launcher');
   process.exit(1);
 }
 
@@ -77,7 +77,7 @@ const parse = () => {
             ItemCode: cleanString(strings[i - 4]),
           });
         } else if (Number(cleanString(strings[i - 5]))) {
-          const Description = cleanString(strings[i - 4]).concat(cleanString(strings[i - 3]).concat(cleanString(strings[i - 2])));
+          const Description = `${cleanString(strings[i - 4])} ${cleanString(strings[i - 3])} ${cleanString(strings[i - 2])})`;
           items.push({
             Description,
             UOM: cleanString(strings[i - 1]),
