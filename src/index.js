@@ -4,8 +4,8 @@ const PDFParser = require('pdf2json');
 const Json2csvParser = require('json2csv').Parser;
 
 const outputDir = 'tmp';
-const outputFileName = `${outputDir}\\output.csv`;
-const outputBrokenFileName = `${outputDir}\\output-broken.csv`;
+const outputFileName = `${outputDir}\\output-${Date.now()}.csv`;
+const outputBrokenFileName = `${outputDir}\\output-broken-${Date.now()}.csv`;
 
 const inputFileName = process.argv[2];
 if (!inputFileName) {
@@ -24,26 +24,26 @@ const parse = () => {
   console.log('Starting program');
   console.log('Parsing PDF');
   const pdfParser = new PDFParser();
+  const csvItemsParser = new Json2csvParser();
+  const csvItemsBrokenParser = new Json2csvParser();
 
   pdfParser.on('pdfParser_dataError', errData => console.error(errData.parserError) );
   pdfParser.on('pdfParser_dataReady', (pdfData) => {
-    console.log('Parsing results');
-
-    console.log(pdfData.formImage.Pages[0].Texts[0].R[0].T);
-
+    console.log('Combining pages');
     const texts = [];
     pdfData.formImage.Pages.forEach((page) => {
       texts.push(...page.Texts);
     });
 
+    console.log('Creating strings');
     const strings = texts.map(text => text.R[0].T);
 
+    console.log('Parsing results');
     const items = [];
     const itemsBroken = [];
     strings.forEach((string, i) => {
       const parsedString = cleanString(string);
       if (parsedString.includes('$') && /^\$\d+.\d+/.test(parsedString)) {
-        console.log(parsedString)
         /*
         Case 1:
         itemCode, description, uom, $price
@@ -95,9 +95,17 @@ const parse = () => {
         }
       }
     });
+    console.log(`Found ${items.length} items and ${itemsBroken.length} broken items`);
+
+    console.log('Converting data to csv');
+    const csvItems = csvItemsParser.parse(items);
+    const csvItemsBroken = csvItemsBrokenParser.parse(itemsBroken);
     console.log('Writing files');
+    fs.writeFileSync(outputFileName, csvItems);
+    fs.writeFileSync(outputBrokenFileName, csvItemsBroken);
     console.log('Opening files');
-    console.log(items)
+    cp.exec(outputFileName);
+    cp.exec(outputBrokenFileName);
     console.log('Done');
   });
 
