@@ -2,12 +2,13 @@
   "name": "pdf-price-sheet-to-csv",
   "version": "1.0.0",
   "description": "Converts RWAnt Price sheet to parsable csv",
-  "licence": "",
+  "license": "UNLICENSED",
   "main": "index.js",
   "scripts": {
     "start": "node ./src/index.js"
   },
   "author": "Bryce J Meyer",
+  "repository": "https://github.com/bjm904/pdf-price-sheet-to-csv.git",
   "devDependencies": {
     "eslint": "^5.14.1",
     "eslint-config-airbnb": "^17.1.0",
@@ -18,5 +19,6 @@
   "dependencies": {
     "json2csv": "^4.3.5",
     "pdf2json": "^1.1.8"
-  }
+  },
+  "private": true
 }
